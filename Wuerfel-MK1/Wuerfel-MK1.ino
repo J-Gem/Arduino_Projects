@@ -1,25 +1,33 @@
 #define WARTEZEIT 20
-int augen[6][7] = {{0, 0, 0, 1, 0, 0, 0},    // Würfelzahl 1
-                   {1, 0, 0, 0, 0, 0, 1},    // Würfelzahl 2
-                   {1, 0, 0, 1, 0, 0, 1},    // Würfelzahl 3
-                   {1, 0, 1, 0, 1, 0, 1},    // Würfelzahl 4
-                   {1, 0, 1, 1, 1, 0, 1},    // Würfelzahl 5
-                   {1, 1, 1, 0, 1, 1, 1}};   // Würfelzahl 6
-
-int pin[] = {2, 3, 4, 5, 6, 7, 8};
-int pinOffset = 2;  // Erste LED ist auf PIN 2
+int GruppeA = 8;   // LED 4
+int GruppeB = 9;   // LED 1 + 7
+int GruppeC = 10;  // LED 3 + 5
+int GruppeD = 11;  // LED 2 + 6
 int tasterPin = 13; // Taster an Pin 13
 
 void zeigeAugen(int wert){
-  for(int i = 0; i < 7; i++)
-    digitalWrite(i + pinOffset, (augen[wert - 1][i] == 1)?HIGH:LOW);
-  delay(WARTEZEIT);  // Eine kurze Pause einfügen
+  // Lösche aller Gruppen
+  digitalWrite(GruppeA, LOW);
+  digitalWrite(GruppeB, LOW);
+  digitalWrite(GruppeC, LOW);
+  digitalWrite(GruppeD, LOW);
+  // Ansteuerung aller Gruppen
+  if(wert%2 != 0) // Ist der Wert ungerade?
+    digitalWrite(GruppeA, HIGH);
+  if(wert > 1)
+    digitalWrite(GruppeB, HIGH);
+  if(wert > 3)
+    digitalWrite(GruppeC, HIGH);
+  if(wert == 6)
+    digitalWrite(GruppeD, HIGH);
+  delay(WARTEZEIT); // Eine kurze Pause einfügen
 }
 
 void setup(){
-  for(int i = 0; i < 7; i++)
-    pinMode(pin[i], OUTPUT);
-  pinMode(tasterPin, INPUT);
+  pinMode(GruppeA, OUTPUT);
+  pinMode(GruppeB, OUTPUT);
+  pinMode(GruppeC, OUTPUT);
+  pinMode(GruppeD, OUTPUT);
 }
 
 void loop(){
